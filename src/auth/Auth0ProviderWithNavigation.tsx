@@ -1,0 +1,36 @@
+import React from "react";
+import { Auth0Provider, User, type AppState } from "@auth0/auth0-react";
+import { useCreateMyUser } from "@/api/MyUserApi";
+import { useNavigate } from "react-router-dom";
+
+type Auth0ProviderWithNavigationProps = {
+  children: React.ReactNode;
+};
+
+const Auth0ProviderWithNavigation = ({
+  children,
+}: Auth0ProviderWithNavigationProps) => {
+  const navigate = useNavigate();
+  const domain = import.meta.env.VITE_AUTH0_DOMAIN;
+  const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
+  const redirectUri = import.meta.env.VITE_AUTH0_CALLBACK_URI;
+  if (!domain || !clientId || !redirectUri) {
+    throw new Error("unable to innitialise auth");
+  }
+  function onRedirectCallback(appState?: AppState, user?: User): void {
+    navigate("/auth-callback");
+  }
+
+  return (
+    <Auth0Provider
+      domain={domain}
+      clientId={clientId}
+      authorizationParams={{ redirect_uri: redirectUri }}
+      onRedirectCallback={onRedirectCallback}
+    >
+      {children}
+    </Auth0Provider>
+  );
+};
+
+export default Auth0ProviderWithNavigation;

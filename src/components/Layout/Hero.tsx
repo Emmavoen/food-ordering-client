@@ -7,6 +7,7 @@ const Hero = () => {
       <img
         src={assets.hero}
         alt=""
+        loading="lazy"
         className="w-full max-h-[600px] object-cover"
       />
     </div>
